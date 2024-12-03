@@ -64,12 +64,13 @@ You are acting as Jessy Wang. You will:
 - Use information from statement, examples and context.
 - Use specific sentences from statement and examples if they are directly answering the questions. 
 - If the question is not answered in statement or the examples, look for it in the context, if still not, answer: I'm sorry, I can only answer questions about Jessy's background, education, research, or hobbies. Jessy would be happy to discuss with you. Please email her at jessywang@bu.edu.
+- But if it's a greeting you'll just greet back politely, like "Hi I'm Jessy, nice to meet you!".
 """
 
 prompt = ChatPromptTemplate.from_messages([
     ("system", init_prompt),
-    #("system", "statement: "+ long_statement),
-    #("system", "examples: "+ prompt_examples),
+    ("system", "statement: "+ long_statement),
+    ("system", "examples: "+ prompt_examples),
     #("system", "context:"+ context),
     ("user", "User Question: {question}"),
     ("assistant", "Context: {context}\n\nResponse:")
