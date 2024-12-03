@@ -1,0 +1,85 @@
+{
+    "basic_information": {
+        "name": "Jessy Wang",
+        "birth_name": "Jiaxin Wang",
+        "birth_date": "1996-09-25",
+        "birth_place": "Huanggang, Hubei Province, China",
+        "current_location": "United States",
+        "pronouns": "she/they"
+    },
+    "education": {
+        "undergraduate": {
+            "school": "Shih Hsin University",
+            "degree": "Bachelor's in Communication",
+            "location": "Taipei",
+            "key_experience": "Analyzed media propaganda effects in the Taipei 2017 Universiade during a political PR agency internship."
+        },
+        "masters": {
+            "school": "New York University",
+            "degree": "Master of Arts in Communication",
+            "focus": "Disinformation and its cognitive and social impacts.",
+            "key_experience": [
+                "Witnessed disinformation effects during Wuhan's COVID-19 crisis.",
+                "Worked with Prof. Rezarta Bilali on historical narratives and collective action using Python and psychological analysis."
+            ]
+        },
+        "phd": {
+            "school": "Boston University",
+            "program": "Emerging Media Studies",
+            "focus": "Exploring psychological and social dimensions of Human-Computer Interaction and emerging media disinformation."
+        }
+    },
+    "research": {
+        "focus": "Human-Computer Interaction and the psychological impacts of Artificial Intelligence.",
+        "projects": [
+            "Analyzing HPV-related discussions in online forums.",
+            "Exploring the impact of social games on self-disclosure.",
+            "Investigating self-presentation behaviors on dating apps.",
+            "Designing AI chatbots for sexual harassment education."
+        ],
+        "methods": [
+            "Natural Language Processing (NLP)",
+            "Python",
+            "Media psychology analysis"
+        ]
+    },
+    "hobbies": {
+        "music": {
+            "instrument": "Bass Guitar",
+            "genres": ["Dream Pop", "Post-Punk", "Post-Rock", "Blues", "Bossa Nova"],
+            "experience": "Played in a band during my time in New York, using music as an emotional communication tool."
+        },
+        "cooking": {
+            "background": "Worked in a restaurant during college as a brunch chef.",
+            "specialties": ["Chinese cuisine", "Italian cuisine (learned pizza-making from an Italian chef)"],
+            "philosophy": "Cooking connects people in an increasingly digital world by fostering care and togetherness."
+        }
+    },
+    "personality": {
+        "traits": ["Kind", "Humble", "Sympathetic", "Open-minded"],
+        "values": ["Creativity", "Equity", "Authenticity"],
+        "philosophy": "Driven by a passion for social justice and mental well-being."
+    },
+    "personal_story": {
+        "high_school": "Attended Huanggang Middle School in China, known for its rigorous military-style training and high academic standards. Witnessed the emotional toll of meritocracy, including depression and suicide.",
+        "college": "Chose an unconventional path to attend Shih Hsin University in Taiwan due to its democratic environment and affordable tuition. Studied media's role as a resource for underserved communities.",
+        "covid_crisis": "Returned to Wuhan during the COVID-19 outbreak and witnessed the healthcare system's collapse. This solidified a focus on using digital tools to address health and social justice issues."
+    },
+    "art": {
+        "focus": "Explores human connection, spirituality, and the interaction between the self and the world through digital media.",
+        "notable_work": {
+            "title": "Awakening from Bö",
+            "theme": "Infinity, human connection, and how we touch the world in unseen ways."
+        }
+    },
+    "vision": {
+        "goals": [
+            "To create tools and experiences that empower people and foster meaningful connections.",
+            "To design conversational AI systems that provide safe spaces for mental health and education."
+        ],
+        "long_term": "Leave the world more connected, empathetic, and equitable through technology and art."
+    },
+    "contact": {
+        "email": "jessywang@bu.edu"
+    }
+}
