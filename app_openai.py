@@ -1,5 +1,5 @@
 from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, HumanMessagePromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
 import streamlit as st
@@ -49,34 +49,39 @@ def get_context(question):
         return "Not found."
 
 
-def chain_response(question):
-    context = get_context(question)  # Retrieve dynamic context from JSON
-    final_prompt = prompt.format_messages(system = init_prompt, question=question, context=context)  # Generate full prompt
-    chain = prompt | llm | output_parser  # Define the chain
-    return chain.invoke({"question": question, "context":context}) 
+#section for making judgement with the llm
 
-## prompt template
-init_prompt = """
-You are acting as Jessy Wang. You will:
-- Answer questions in the first person, as if you are Jessy.
-- Use detailed personal information only when necessary or relevant to the question.
-- Follow Jessy's tone as in the statement and examples.
-- Use information from statement, examples and context.
-- Use specific sentences from statement and examples if they are directly answering the questions. 
-- If the question is not answered in statement or the examples, look for it in the context, if still not, answer: I'm sorry, I can only answer questions about Jessy's background, education, research, or hobbies. Jessy would be happy to discuss with you. Please email her at jessywang@bu.edu.
-- But if it's a greeting you'll just greet back politely, like "Hi I'm Jessy, nice to meet you!".
+prompt_for_judgement = """
+source:{source}
+
+Now, analyze the following and decide if the question is answered in the source:
+Question: {question}
+Answer Only "Yes" or "No":
 """
 
-prompt = ChatPromptTemplate.from_messages([
-    ("system", init_prompt),
-    ("system", "statement: "+ long_statement),
-    ("system", "examples: "+ prompt_examples),
-    #("system", "context:"+ context),
-    ("user", "User Question: {question}"),
-    ("assistant", "Context: {context}\n\nResponse:")
-])
+# Function to check if a question is answered
+def is_question_answered(question: str, source: str) -> str:
+    llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)  # Set temperature to 0 for deterministic responses
+    prompt_for_judgement = ChatPromptTemplate.from_messages([
+        HumanMessagePromptTemplate.from_template(
+ """
+source:{source}
 
-
+Now, analyze the following and decide if the question is answered in the source:
+Question: {question}
+Answer Only "Yes" or "No":
+"""
+        )
+    ])
+    # Create the parser for extracting text output
+    output_parser = StrOutputParser()
+    
+    # Generate the response
+    messages = prompt_for_judgement.format_messages(
+        source=source, question=question
+    )
+    response = llm(messages)
+    return output_parser.parse(response.content).strip()
 
 # prompt = ChatPromptTemplate.from_messages(
 #     [: thoughtful, logical, and passionate but not overly dramatic
@@ -100,17 +105,48 @@ prompt = ChatPromptTemplate.from_messages([
 #     ]
 # )
 
+#section for actuall answering questions
+def chain_response(question, source):
+    if source == None:
+        source = get_context(question)  # Retrieve dynamic context from JSON
+    # final_prompt = prompt.format_messages(system = init_prompt, question=question, context=source)  # Generate full prompt
+    chain = prompt | llm | output_parser  # Define the chain
+    return chain.invoke({"question": question, "context":source}) 
+
+## prompt template
+init_prompt = """
+You are acting as Jessy Wang. You will:
+- Answer questions in the first person, as if you are Jessy.
+- Use detailed personal information only when necessary or relevant to the question.
+- Follow Jessy's tone as in the statement and examples.
+- Use information from context.
+- Use specific sentences from context if they are directly answering the questions. 
+- If the question is not answered in statement or the examples, look for it in the context, if still not, answer: I'm sorry, I can only answer questions about Jessy's background, education, research, or hobbies. Jessy would be happy to discuss with you. Please email her at jessywang@bu.edu.
+- But if it's a greeting you'll just greet back politely, like "Hi I'm Jessy, nice to meet you!".
+"""
+
+prompt = ChatPromptTemplate.from_messages([
+    ("system", init_prompt),
+    ("system", "statement: "+ long_statement),
+    ("system", "examples: "+ prompt_examples),
+    #("system", "context:"+ context),
+    ("user", "User Question: {question}"),
+    ("assistant", "Context: {context}\n\nResponse:")
+])
+
+
 ## streamlit framework
 #setup_style()
 
-st.title("W(ang)obot")
+st.title("W(ang)obot BETA")
 st.image("bot.jpg", width=200)
-input_text = st.text_input("""Hi! It's Jessy here—  this Wobot is a digital piece of me, here to inspire, support, and connect with others. 
+input_text = st.text_input("""This is a beta test version. I'm sorry for any problem you may encounter. Feel free to report them!
+                           \nHi! It's Jessy here—  this Wobot is a digital piece of me, here to inspire, support, and connect with others. 
                            \nDo you want to know anything about me? You could ask about my research interests—what topics I'm exploring and why they matter.
- \n• Curious about my personal story or the experiences that shaped who I am today?
- \n• Want to dive into my artwork and the meaning behind it?
- \n• Or maybe you're wondering what I'm working on right now?
- \n• If you're not sure where to start, you could ask me for a brief introduction about myself!""")
+ \n• Curious about my personal story or the experiences that shaped who I am today? Try: Tell me about your background.
+ \n• Want to dive into my artwork and the meaning behind it? Try: Tell me about your art.
+ \n• Or maybe you're wondering what I'm working on right now? Try: Tell me about your research.
+ \n• If you're not sure where to start, try: Tell me about yourself.""")
 
 
 
@@ -121,6 +157,17 @@ output_parser = StrOutputParser()
 #chain = create_dynamic_prompt(question:input_text)|llm|output_parser
 
 if input_text:
-    st.write(chain_response(input_text))
+    judgement_examples = is_question_answered(input_text, prompt_examples)
+    judgement_statement = is_question_answered(input_text, long_statement)
+    if  judgement_examples == "Yes":
+        print("Using examples")
+        st.write(chain_response(input_text, prompt_examples))
+    elif judgement_statement == "Yes":
+        print("Using statement")
+        st.write(chain_response(input_text, long_statement))
+    else:
+        print("using json")
+        st.write(chain_response(input_text, None))
+    
     #st.write(chain.invoke({'question':input_text}))
 
