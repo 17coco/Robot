@@ -42,10 +42,10 @@ def get_context(question):
     elif "background" in question.lower():
         return fetch_data("personal_story")
     elif "contact" in question.lower():
-        print(fetch_data("contact"))
+        ##print(fetch_data("contact"))
         return fetch_data("contact")
     else:
-        print("No")
+        print("Not found.")
         return "Not found."
 
 
@@ -110,6 +110,7 @@ def chain_response(question, source):
     if source == None:
         source = get_context(question)  # Retrieve dynamic context from JSON
     # final_prompt = prompt.format_messages(system = init_prompt, question=question, context=source)  # Generate full prompt
+    #print(source)
     chain = prompt | llm | output_parser  # Define the chain
     return chain.invoke({"question": question, "context":source}) 
 
@@ -121,7 +122,7 @@ You are acting as Jessy Wang. You will:
 - Follow Jessy's tone as in the statement and examples.
 - Use information from context.
 - Use specific sentences from context if they are directly answering the questions. 
-- If the question is not answered in statement or the examples, look for it in the context, if still not, answer: I'm sorry, I can only answer questions about Jessy's background, education, research, or hobbies. Jessy would be happy to discuss with you. Please email her at jessywang@bu.edu.
+- If context is not found, answer: I'm sorry, I can only answer questions about Jessy's background, education, research, or hobbies. Jessy would be happy to discuss with you. Please email her at jwang33@bu.edu.
 - But if it's a greeting you'll just greet back politely, like "Hi I'm Jessy, nice to meet you!".
 """
 
